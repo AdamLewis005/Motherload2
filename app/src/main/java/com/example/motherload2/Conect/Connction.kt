@@ -1,0 +1,141 @@
+package com.example.motherload2.Conect
+
+
+import android.util.Log
+import com.android.volley.Request
+import com.android.volley.toolbox.StringRequest
+import com.example.motherload2.App
+import org.w3c.dom.Document
+import java.net.URLEncoder
+import java.security.MessageDigest
+import javax.xml.parsers.DocumentBuilder
+import javax.xml.parsers.DocumentBuilderFactory
+
+class Connection private constructor() {
+    private val TAG = "Connection"
+    private val BASE_URL = " https://test.vautard.fr/creuse_srv/"
+    private lateinit var session : String
+    private lateinit var signature : String
+    private var conected : Boolean = false
+
+    companion object {
+        @Volatile
+        private var INSTANCE: Connection? = null
+
+        fun getInstance(): Connection {
+            return INSTANCE ?: synchronized(this) {
+                INSTANCE ?: Connection().also { INSTANCE = it }
+            }
+        }
+    }
+
+    fun ConectWeb(Login: String, Password: String) {
+
+
+        val encodepass = hash(Password)
+        val encodedLog = URLEncoder.encode(Login, "UTF-8")
+
+        val url = BASE_URL + "/connexion.php?login=$encodedLog&passwd=$encodepass"
+
+        val stringRequest = StringRequest(
+            Request.Method.GET, url,
+            { response -> // la réponse retournée par le WS si succès
+                try {
+                    val docBF: DocumentBuilderFactory = DocumentBuilderFactory.newInstance()
+                    val docBuilder: DocumentBuilder = docBF.newDocumentBuilder()
+                    val doc: Document = docBuilder.parse(response.byteInputStream())
+
+                    // On vérifie le status
+                    val statusNode = doc.getElementsByTagName("STATUS").item(0)
+                    if (statusNode != null) {
+                        val status = statusNode.textContent.trim()
+
+                        if (status == "OK") {
+                            Log.d(TAG, "Connection: Log with succes")
+                            val sessionNode = doc.getElementsByTagName("SESSION").item(0)
+                            val signatureNode = doc.getElementsByTagName("SIGNATURE").item(0)
+                            this.session = sessionNode.textContent.trim()
+                            this.signature = signatureNode.textContent.trim()
+                            this.conected = true
+                            Log.d("signature",this.signature)
+                            Log.d("session",this.session)
+
+
+
+                        } else {
+                            Log.e(TAG, "Connection: Erreur - $status")
+                            // popup with status Error
+                        }
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Erreur lors de la lecture de la réponse XML", e)
+                }
+            },
+            { error ->
+                Log.d(TAG, "Connection error")
+                error.printStackTrace()
+            })
+
+        App.instance.requestQueue?.add(stringRequest)
+    }
+
+    fun hash(str : String ): String {
+        val bytes = str.toByteArray()
+        val md = MessageDigest.getInstance("SHA-256")
+        val digest = md.digest(bytes)
+        return digest.fold("", { str, it -> str + "%02x".format(it) })
+    }
+    fun getConected() : Boolean {
+        return this.conected
+    }
+
+    fun getSession() : String{
+        return this.session
+    }
+    fun getSignature() : String{
+        return this.signature
+    }
+
+
+    fun changeName(name : String){
+
+        val encodeses = URLEncoder.encode(this.session, "UTF-8")
+        val encodesig = URLEncoder.encode(this.signature, "UTF-8")
+        val encodename = URLEncoder.encode(name, "UTF-8")
+        val url = BASE_URL + "/changenom.php?session=$encodeses&signature=$encodesig&nom=$encodename"
+
+        val stringRequest = StringRequest(
+            Request.Method.GET, url,
+            { response -> // la réponse retournée par le WS si succès
+                try {
+                    val docBF: DocumentBuilderFactory = DocumentBuilderFactory.newInstance()
+                    val docBuilder: DocumentBuilder = docBF.newDocumentBuilder()
+                    val doc: Document = docBuilder.parse(response.byteInputStream())
+
+                    // On vérifie le status
+                    val statusNode = doc.getElementsByTagName("STATUS").item(0)
+                    if (statusNode != null) {
+                        val status = statusNode.textContent.trim()
+
+                        if (status == "OK") {
+                            Log.d(TAG, "Changename: Name Changed")
+
+                        } else {
+                            Log.e(TAG, "Changename: Erreur - $status")
+                            // popup with Changename Error
+                        }
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Erreur lors de la lecture de la réponse XML", e)
+                }
+            },
+            { error ->
+                Log.d(TAG, "Changename error")
+                error.printStackTrace()
+            })
+
+        App.instance.requestQueue?.add(stringRequest)
+    }
+
+
+}
