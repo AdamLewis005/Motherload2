@@ -8,7 +8,7 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.example.motherload2.R
 
-class MainActivity : AppCompatActivity() {// teste git 2
+class MainActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
