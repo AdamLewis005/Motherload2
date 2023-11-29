@@ -5,6 +5,7 @@ import android.util.Log
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.example.motherload2.App
+import com.example.motherload2.Character.Character
 import org.w3c.dom.Document
 import java.net.URLEncoder
 import java.security.MessageDigest
@@ -97,7 +98,10 @@ class Connection private constructor() {
     }
 
 
-    fun changeName(name : String){
+    fun changeName(name : String) {
+        if (!this.conected) {Log.e(TAG,"Not Connected")
+            return
+        }
 
         val encodeses = URLEncoder.encode(this.session, "UTF-8")
         val encodesig = URLEncoder.encode(this.signature, "UTF-8")
@@ -120,6 +124,7 @@ class Connection private constructor() {
                         if (status == "OK") {
                             Log.d(TAG, "Changename: Name Changed")
 
+
                         } else {
                             Log.e(TAG, "Changename: Erreur - $status")
                             // popup with Changename Error
@@ -135,6 +140,109 @@ class Connection private constructor() {
             })
 
         App.instance.requestQueue?.add(stringRequest)
+    }
+
+    fun deplacement(character: Character){
+        if (!this.conected) {Log.e(TAG,"Not Connected")
+            return
+        }
+
+
+        val encodeses = URLEncoder.encode(this.session, "UTF-8")
+        val encodesig = URLEncoder.encode(this.signature, "UTF-8")
+
+        val url =
+            BASE_URL + "/deplace.php?session=$encodeses&signature=$encodesig" +
+                    "&lon=${character.getlon()}&lat=${character.getlat()}"
+
+        val stringRequest = StringRequest(
+            Request.Method.GET, url,
+            { response -> // la réponse retournée par le WS si succès
+                try {
+                    val docBF: DocumentBuilderFactory = DocumentBuilderFactory.newInstance()
+                    val docBuilder: DocumentBuilder = docBF.newDocumentBuilder()
+                    val doc: Document = docBuilder.parse(response.byteInputStream())
+
+                    // On vérifie le status
+                    val statusNode = doc.getElementsByTagName("STATUS").item(0)
+                    if (statusNode != null) {
+                        val status = statusNode.textContent.trim()
+
+                        if (status == "OK") {
+                            Log.d(TAG, "Deplacement: Name Changed")
+                            val voisinsNode = doc.getElementsByTagName("VOISINS").item(0)
+                            character.setvoisins(voisinsNode.textContent.trim())
+
+                        } else {
+                            Log.e(TAG, "Deplacement: Erreur - $status")
+                            // popup with Deplacement Error
+                        }
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Erreur lors de la lecture de la réponse XML", e)
+                }
+            },
+            { error ->
+                Log.d(TAG, "Deplacement error")
+                error.printStackTrace()
+            })
+
+        App.instance.requestQueue?.add(stringRequest)
+    }
+
+    fun statusplayer(character: Character) {
+        if (!this.conected) {Log.e(TAG,"Not Connected")
+            return
+        }
+
+        val encodeses = URLEncoder.encode(this.session, "UTF-8")
+        val encodesig = URLEncoder.encode(this.signature, "UTF-8")
+
+        val url =
+            BASE_URL + "/deplace.php?session=$encodeses&signature=$encodesig"
+
+        val stringRequest = StringRequest(
+            Request.Method.GET, url,
+            { response -> // la réponse retournée par le WS si succès
+                try {
+                    val docBF: DocumentBuilderFactory = DocumentBuilderFactory.newInstance()
+                    val docBuilder: DocumentBuilder = docBF.newDocumentBuilder()
+                    val doc: Document = docBuilder.parse(response.byteInputStream())
+
+                    // On vérifie le status
+                    val statusNode = doc.getElementsByTagName("STATUS").item(0)
+                    if (statusNode != null) {
+                        val status = statusNode.textContent.trim()
+
+                        if (status == "OK") {
+                            Log.d(TAG, "Deplacement: Name Changed")
+                                                                                            // PAS FINI
+                            val moneyNode = doc.getElementsByTagName("MONEY").item(0)
+                            //character.setmoney(moneyNode)
+                            val pickNode = doc.getElementsByTagName("PICKAXE").item(0)
+                            character.setpick(pickNode.textContent.trim())
+                            val positionNode = doc.getElementsByTagName("POSITION").item(0)
+                            //character.changecood(positionNode)
+                            val itemsNode = doc.getElementsByTagName("ITEMS").item(0)
+
+
+
+                        } else {
+                            Log.e(TAG, "Deplacement: Erreur - $status")
+                            // popup with Deplacement Error
+                        }
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Erreur lors de la lecture de la réponse XML", e)
+                }
+            },
+            { error ->
+                Log.d(TAG, "Deplacement error")
+                error.printStackTrace()
+            })
+
+        App.instance.requestQueue?.add(stringRequest)
+
     }
 
 
