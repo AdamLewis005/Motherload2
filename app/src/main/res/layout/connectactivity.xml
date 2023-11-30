@@ -28,5 +28,19 @@
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:text="conect" />
+
+        <Button
+            android:id="@+id/changename"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:text="Change Name" />
+
+        <Button
+            android:id="@+id/coords"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:text="Coords" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

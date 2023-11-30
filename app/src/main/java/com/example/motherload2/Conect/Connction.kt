@@ -150,6 +150,8 @@ class Connection private constructor() {
 
         val encodeses = URLEncoder.encode(this.session, "UTF-8")
         val encodesig = URLEncoder.encode(this.signature, "UTF-8")
+        val encodeco = URLEncoder.encode("0.0F", "UTF-8")
+
 
         val url =
             BASE_URL + "/deplace.php?session=$encodeses&signature=$encodesig" +
@@ -169,9 +171,10 @@ class Connection private constructor() {
                         val status = statusNode.textContent.trim()
 
                         if (status == "OK") {
-                            Log.d(TAG, "Deplacement: Name Changed")
+                            Log.d(TAG, "Deplacement: deplacer")
                             val voisinsNode = doc.getElementsByTagName("VOISINS").item(0)
                             character.setvoisins(voisinsNode.textContent.trim())
+                            Log.d("voisins",character.getvoisin())
 
                         } else {
                             Log.e(TAG, "Deplacement: Erreur - $status")
@@ -199,7 +202,7 @@ class Connection private constructor() {
         val encodesig = URLEncoder.encode(this.signature, "UTF-8")
 
         val url =
-            BASE_URL + "/deplace.php?session=$encodeses&signature=$encodesig"
+            BASE_URL + "/status_joueur.php?session=$encodeses&signature=$encodesig"
 
         val stringRequest = StringRequest(
             Request.Method.GET, url,
@@ -215,20 +218,30 @@ class Connection private constructor() {
                         val status = statusNode.textContent.trim()
 
                         if (status == "OK") {
-                            Log.d(TAG, "Deplacement: Name Changed")
+                            Log.d(TAG, "Status_joueur: Status obtenu")
                                                                                             // PAS FINI
                             val moneyNode = doc.getElementsByTagName("MONEY").item(0)
-                            //character.setmoney(moneyNode)
+                            val money = moneyNode.textContent.trim()
+                            Log.d("items",money)
+                            character.setmoney(money)
                             val pickNode = doc.getElementsByTagName("PICKAXE").item(0)
-                            character.setpick(pickNode.textContent.trim())
+                            val pick = pickNode.textContent.trim()
+                            character.setpick(pick)
+                            Log.d("pick",pick)
                             val positionNode = doc.getElementsByTagName("POSITION").item(0)
-                            //character.changecood(positionNode)
+                            val pose = positionNode.textContent.trim()
+                            Log.d("pose",pose)
+                            //character.changecood(pose)
                             val itemsNode = doc.getElementsByTagName("ITEMS").item(0)
+                            val items = itemsNode.textContent.trim()
+                            Log.d("items",items)
+                            character.setitems(items)
+
 
 
 
                         } else {
-                            Log.e(TAG, "Deplacement: Erreur - $status")
+                            Log.e(TAG, "status_joueur: Erreur - $status")
                             // popup with Deplacement Error
                         }
                     }
@@ -237,7 +250,7 @@ class Connection private constructor() {
                 }
             },
             { error ->
-                Log.d(TAG, "Deplacement error")
+                Log.d(TAG, "status_joueur error")
                 error.printStackTrace()
             })
 
@@ -245,5 +258,26 @@ class Connection private constructor() {
 
     }
 
+    fun reinit_player() {
+        if (!this.conected) {
+            Log.e(TAG, "Not Connected")
+            return
+        }
+
+        val encodeses = URLEncoder.encode(this.session, "UTF-8")
+        val encodesig = URLEncoder.encode(this.signature, "UTF-8")
+
+        val url =
+            BASE_URL + "/reinit_joueur.php?session=$encodeses&signature=$encodesig"
+        val stringRequest = StringRequest(
+            Request.Method.GET, url,
+            { response ->
+                Log.d(TAG, "reset succesful")
+            },
+            { error ->
+                Log.d(TAG, "reinit_joueur error")
+                error.printStackTrace()
+            })
+    }
 
 }
