@@ -31,8 +31,9 @@ class Connection private constructor() {
     }
 
     fun ConectWeb(Login: String, Password: String) {
-
-
+    /*
+        fonction utiliser pour se connecter au serveur en donnent en paramettre lindentifiant et le mot de passe
+    */
         val encodepass = hash(Password)
         val encodedLog = URLEncoder.encode(Login, "UTF-8")
 
@@ -76,11 +77,14 @@ class Connection private constructor() {
                 Log.d(TAG, "Connection error")
                 error.printStackTrace()
             })
-
+        // ligne importante a ne pas oublier
         App.instance.requestQueue?.add(stringRequest)
     }
 
     fun hash(str : String ): String {
+        /*
+        permet le hashage en SHA256 du mot de passe qui est ensuite envoyer au serveur
+         */
         val bytes = str.toByteArray()
         val md = MessageDigest.getInstance("SHA-256")
         val digest = md.digest(bytes)
@@ -99,7 +103,12 @@ class Connection private constructor() {
 
 
     fun changeName(name : String) {
-        if (!this.conected) {Log.e(TAG,"Not Connected")
+        /*
+        fonction pour communiquer avec le serveur pour changer le psodo
+         */
+
+        if (!this.conected) {// on verifie qu on soit bien connecter au serveur et quon ai recuperer la sessio et la signature
+            Log.e(TAG,"Not Connected")
             return
         }
 
@@ -138,12 +147,20 @@ class Connection private constructor() {
                 Log.d(TAG, "Changename error")
                 error.printStackTrace()
             })
-
+        // ligne importante a ne pas oublier
         App.instance.requestQueue?.add(stringRequest)
     }
 
     fun deplacement(character: Character){
-        if (!this.conected) {Log.e(TAG,"Not Connected")
+        /*
+        on envoie au serveur les nouvels coordonners
+         */
+
+
+
+        if (!this.conected) {
+            // on verifie qu on soit bien connecter au serveur et quon ai recuperer la sessio et la signature
+            Log.e(TAG,"Not Connected")
             return
         }
 
@@ -189,12 +206,18 @@ class Connection private constructor() {
                 Log.d(TAG, "Deplacement error")
                 error.printStackTrace()
             })
-
+        // ligne importante a ne pas oublier
         App.instance.requestQueue?.add(stringRequest)
     }
 
     fun statusplayer(character: Character) {
-        if (!this.conected) {Log.e(TAG,"Not Connected")
+        /*
+        demande au serveur de recuperer des information sur notre joueur
+        inventaire/argent/position/niveau de pick
+         */
+
+        if (!this.conected) {
+            Log.e(TAG,"Not Connected")
             return
         }
 
@@ -259,6 +282,10 @@ class Connection private constructor() {
     }
 
     fun reinit_player() {
+        /*
+        reset le joueur a 0 au niveau du serveur faux metre signal de warning pour eviter les miss click
+         */
+
         if (!this.conected) {
             Log.e(TAG, "Not Connected")
             return
