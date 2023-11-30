@@ -42,5 +42,18 @@
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:text="Coords" />
+        <Button
+            android:id="@+id/status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:text="Stats" />
+        <Button
+            android:id="@+id/reinit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:text="Restart" />
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

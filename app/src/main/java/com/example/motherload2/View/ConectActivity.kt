@@ -45,10 +45,17 @@ class ConectActivity : AppCompatActivity() {
 
         val buttoncoords : Button = findViewById(R.id.coords)
         buttoncoords.setOnClickListener {
-            conectView.statusplayer()
+            conectView.deplacement()
 
         }
-
+        val buttonStatus : Button = findViewById(R.id.status)
+        buttonStatus.setOnClickListener {
+            conectView.statusplayer()
+        }
+        val buttonreinit : Button = findViewById(R.id.reinit)
+        buttonreinit.setOnClickListener {
+            conectView.reinitplayer()
+        }
 
     }
 }

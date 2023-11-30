@@ -272,12 +272,18 @@ class Connection private constructor() {
         val stringRequest = StringRequest(
             Request.Method.GET, url,
             { response ->
-                Log.d(TAG, "reset succesful")
+                try {
+                    Log.d(TAG, "reset succesful")
+                }catch (e: Exception) {
+                    Log.e(TAG, "Erreur lors de la lecture de la réponse XML", e)
+                }
+
             },
             { error ->
                 Log.d(TAG, "reinit_joueur error")
                 error.printStackTrace()
             })
+        App.instance.requestQueue?.add(stringRequest)
     }
 
 }

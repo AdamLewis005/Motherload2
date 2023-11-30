@@ -21,4 +21,7 @@ class ConectView : ViewModel() {
     fun statusplayer(){
         repository.statusplayer(perso)
     }
+    fun reinitplayer(){
+        repository.reinit_player()
+    }
 }
