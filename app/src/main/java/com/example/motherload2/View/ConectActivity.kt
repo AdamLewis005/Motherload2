@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.example.motherload2.Character.Item
 import com.example.motherload2.ConectView
 import com.example.motherload2.R
 
@@ -64,8 +65,11 @@ class ConectActivity : AppCompatActivity() {
 
         val buttonitem : Button = findViewById(R.id.item)
         buttonitem.setOnClickListener{
-            conectView.detailitem()
+            val id = "5"// get texte id
+            val item = Item.getInstance(id)
+            conectView.detailitem(id,item)
         }
+
 
 
     }

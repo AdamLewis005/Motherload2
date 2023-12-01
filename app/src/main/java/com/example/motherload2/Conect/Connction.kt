@@ -6,6 +6,7 @@ import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.example.motherload2.App
 import com.example.motherload2.Character.Character
+import com.example.motherload2.Character.Item
 import org.w3c.dom.Document
 import java.net.URLEncoder
 import java.security.MessageDigest
@@ -102,7 +103,7 @@ class Connection private constructor() {
     }
 
 
-    fun changeName(name : String) {
+    fun changeName(name : String,perso:Character) {
         /*
         fonction pour communiquer avec le serveur pour changer le psodo
          */
@@ -132,6 +133,8 @@ class Connection private constructor() {
 
                         if (status == "OK") {
                             Log.d(TAG, "Changename: Name Changed")
+                            perso.changename(name)
+
 
 
                         } else {
@@ -382,7 +385,7 @@ class Connection private constructor() {
 
     }
 
-    fun item_detail(item : String) {
+    fun item_detail(item_id : String,item: Item) {
         /*
         demande le resumer dun object au serveur
          */
@@ -395,7 +398,7 @@ class Connection private constructor() {
 
         val encodeses = URLEncoder.encode(this.session, "UTF-8")
         val encodesig = URLEncoder.encode(this.signature, "UTF-8")
-        val encodeitem = URLEncoder.encode(item,"UTF-8")
+        val encodeitem = URLEncoder.encode(item_id,"UTF-8")
 
         val url =
             BASE_URL + "/item_detail.php?session=$encodeses&signature=$encodesig&item_id=$encodeitem"
@@ -414,11 +417,33 @@ class Connection private constructor() {
 
                         if (status == "OK") {
                             Log.d(TAG, "Detail: detail obtenu")
-                            val itemNode = doc.getElementsByTagName("ITEM").item(0)
-                            if (itemNode!= null){
-                                val item = itemNode.textContent.trim()
-                                Log.d("detail_item",item)
-                            }
+                            val nomNode = doc.getElementsByTagName("NOM").item(0)
+                            val nom = nomNode.textContent.trim()
+                            Log.d("detail_item",nom)
+                            item.setnom(nom)
+                            val typeNode = doc.getElementsByTagName("TYPE").item(0)
+                            val type = typeNode.textContent.trim()
+                            Log.d("detail_item",type)
+                            item.settype(type)
+                            val rareteNode = doc.getElementsByTagName("RARETE").item(0)
+                            val rarete = rareteNode.textContent.trim()
+                            Log.d("detail_item",rarete)
+                            item.setrarete(rarete)
+                            val imageNode = doc.getElementsByTagName("IMAGE").item(0)
+                            val image = imageNode.textContent.trim()
+                            Log.d("detail_item",image)
+                            item.setimage(image)
+                            val decFrNode = doc.getElementsByTagName("DESC_FR").item(0)
+                            val decFr = decFrNode.textContent.trim()
+                            Log.d("detail_item",decFr)
+                            item.setdecFr(decFr)
+                            val decEnNode = doc.getElementsByTagName("DESC_EN").item(0)
+                            val decEn = decEnNode.textContent.trim()
+                            Log.d("detail_item",decEn)
+                            item.setdecEn(decEn)
+
+
+
 
                         } else {
                         Log.e(TAG, "item detail: Erreur - $status")

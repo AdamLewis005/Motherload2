@@ -2,6 +2,7 @@ package com.example.motherload2
 
 import androidx.lifecycle.ViewModel
 import com.example.motherload2.Character.Character
+import com.example.motherload2.Character.Item
 import com.example.motherload2.Conect.Connection
 
 class ConectView : ViewModel() {
@@ -12,7 +13,7 @@ class ConectView : ViewModel() {
         repository.ConectWeb(login,password)
     }
     fun changename(name:String){
-        repository.changeName(name)
+        repository.changeName(name,perso)
     }
 
     fun deplacement(){
@@ -27,7 +28,7 @@ class ConectView : ViewModel() {
     fun dig(){
         repository.dig(perso)
     }
-    fun detailitem(){
-        repository.item_detail("5")
+    fun detailitem(id:String,item:Item){
+        repository.item_detail(id,item)
     }
 }
