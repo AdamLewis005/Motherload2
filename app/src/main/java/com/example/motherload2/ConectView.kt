@@ -6,7 +6,7 @@ import com.example.motherload2.Conect.Connection
 
 class ConectView : ViewModel() {
     private val repository = Connection.getInstance()
-    private val perso = Character.getInstance(0.0F,0.0F)
+    private val perso = Character.getInstance("1.9365067f","47.8430441f")
 
     fun conectWeb(login: String, password: String){
         repository.ConectWeb(login,password)
@@ -23,5 +23,11 @@ class ConectView : ViewModel() {
     }
     fun reinitplayer(){
         repository.reinit_player()
+    }
+    fun dig(){
+        repository.dig(perso)
+    }
+    fun detailitem(){
+        repository.item_detail("5")
     }
 }

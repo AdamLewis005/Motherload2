@@ -28,7 +28,7 @@ class ConectActivity : AppCompatActivity() {
             conectView.conectWeb(log,pass)
             // Une fois connecter, on peut quitter l'activity. Cela reviendra automatiquement
             // à l'actvity précédente, c'est à dire MainActivity.
-            finish()
+            //finish()
         }
 
 
@@ -56,6 +56,17 @@ class ConectActivity : AppCompatActivity() {
         buttonreinit.setOnClickListener {
             conectView.reinitplayer()
         }
+
+        val buttondig : Button = findViewById(R.id.dig)
+        buttondig.setOnClickListener {
+            conectView.dig()
+        }
+
+        val buttonitem : Button = findViewById(R.id.item)
+        buttonitem.setOnClickListener{
+            conectView.detailitem()
+        }
+
 
     }
 }

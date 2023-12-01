@@ -55,5 +55,18 @@
             android:layout_weight="0"
             android:text="Restart" />
 
+        <Button
+            android:id="@+id/dig"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:text="Dig" />
+        <Button
+            android:id="@+id/item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:text="Detail de litem" />
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

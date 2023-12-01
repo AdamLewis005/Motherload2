@@ -153,7 +153,7 @@ class Connection private constructor() {
 
     fun deplacement(character: Character){
         /*
-        on envoie au serveur les nouvels coordonners
+        on envoie au serveur les nouvels coordonners faudra appeler cette fonction tout les x temps
          */
 
 
@@ -167,12 +167,13 @@ class Connection private constructor() {
 
         val encodeses = URLEncoder.encode(this.session, "UTF-8")
         val encodesig = URLEncoder.encode(this.signature, "UTF-8")
-        val encodeco = URLEncoder.encode("0.0F", "UTF-8")
+        val encodelat = URLEncoder.encode(character.getlat(), "UTF-8")
+        val encodelon = URLEncoder.encode(character.getlon(),"UTF-8")
 
 
         val url =
             BASE_URL + "/deplace.php?session=$encodeses&signature=$encodesig" +
-                    "&lon=${character.getlon()}&lat=${character.getlat()}"
+                    "&lon=$encodelon&lat=$encodelat"
 
         val stringRequest = StringRequest(
             Request.Method.GET, url,
@@ -217,6 +218,7 @@ class Connection private constructor() {
          */
 
         if (!this.conected) {
+            // on verifie qu on soit bien connecter au serveur et quon ai recuperer la sessio et la signature
             Log.e(TAG,"Not Connected")
             return
         }
@@ -254,7 +256,6 @@ class Connection private constructor() {
                             val positionNode = doc.getElementsByTagName("POSITION").item(0)
                             val pose = positionNode.textContent.trim()
                             Log.d("pose",pose)
-                            //character.changecood(pose)
                             val itemsNode = doc.getElementsByTagName("ITEMS").item(0)
                             val items = itemsNode.textContent.trim()
                             Log.d("items",items)
@@ -287,6 +288,7 @@ class Connection private constructor() {
          */
 
         if (!this.conected) {
+            // on verifie qu on soit bien connecter au serveur et quon ai recuperer la sessio et la signature
             Log.e(TAG, "Not Connected")
             return
         }
@@ -310,7 +312,131 @@ class Connection private constructor() {
                 Log.d(TAG, "reinit_joueur error")
                 error.printStackTrace()
             })
+
         App.instance.requestQueue?.add(stringRequest)
     }
+
+    fun dig(character: Character){
+
+        if (!this.conected) {
+            // on verifie qu on soit bien connecter au serveur et quon ai recuperer la sessio et la signature
+            Log.e(TAG,"Not Connected")
+            return
+        }
+
+
+        val encodeses = URLEncoder.encode(this.session, "UTF-8")
+        val encodesig = URLEncoder.encode(this.signature, "UTF-8")
+        val encodelat = URLEncoder.encode(character.getlat(), "UTF-8")
+        val encodelon = URLEncoder.encode(character.getlon(),"UTF-8")
+
+
+        val url =
+            BASE_URL + "/creuse.php?session=$encodeses&signature=$encodesig" +
+                    "&lon=$encodelon&lat=$encodelat"
+
+        val stringRequest = StringRequest(
+            Request.Method.GET, url,
+            { response -> // la réponse retournée par le WS si succès
+                try {
+                    val docBF: DocumentBuilderFactory = DocumentBuilderFactory.newInstance()
+                    val docBuilder: DocumentBuilder = docBF.newDocumentBuilder()
+                    val doc: Document = docBuilder.parse(response.byteInputStream())
+
+                    // On vérifie le status
+                    val statusNode = doc.getElementsByTagName("STATUS").item(0)
+                    if (statusNode != null) {
+                        val status = statusNode.textContent.trim()
+
+                        if (status == "OK") {
+                            Log.d(TAG, "Creuser: succesful dig")
+                            val voisinsNode = doc.getElementsByTagName("VOISINS").item(0)
+                            character.setvoisins(voisinsNode.textContent.trim())
+                            Log.d("voisins",character.getvoisin())
+                            val dethNode = doc.getElementsByTagName("DEPTH").item(0)
+                            val deth = dethNode.textContent.trim()
+                            Log.d("Deth",deth)
+                            val itemNode = doc.getElementsByTagName("ITEM_ID").item(0)
+
+                            if (itemNode != null) {
+                                val item = itemNode.textContent.trim()
+                                character.additem(item)
+                                Log.d("item got", item)
+                            }
+
+                        } else {
+                            Log.e(TAG, "Creuser: Erreur - $status")
+                            // popup with creuser Error avec le satus attacher
+                        }
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Erreur lors de la lecture de la réponse XML", e)
+                }
+            },
+            { error ->
+                Log.d(TAG, "Creuser error")
+                error.printStackTrace()
+            })
+        // ligne importante a ne pas oublier
+        App.instance.requestQueue?.add(stringRequest)
+
+    }
+
+    fun item_detail(item : String) {
+        /*
+        demande le resumer dun object au serveur
+         */
+
+        if (!this.conected) {
+            // on verifie qu on soit bien connecter au serveur et quon ai recuperer la sessio et la signature
+            Log.e(TAG, "Not Connected")
+            return
+        }
+
+        val encodeses = URLEncoder.encode(this.session, "UTF-8")
+        val encodesig = URLEncoder.encode(this.signature, "UTF-8")
+        val encodeitem = URLEncoder.encode(item,"UTF-8")
+
+        val url =
+            BASE_URL + "/item_detail.php?session=$encodeses&signature=$encodesig&item_id=$encodeitem"
+        val stringRequest = StringRequest(
+            Request.Method.GET, url,
+            { response ->
+                try {
+                    val docBF: DocumentBuilderFactory = DocumentBuilderFactory.newInstance()
+                    val docBuilder: DocumentBuilder = docBF.newDocumentBuilder()
+                    val doc: Document = docBuilder.parse(response.byteInputStream())
+
+                    // On vérifie le status
+                    val statusNode = doc.getElementsByTagName("STATUS").item(0)
+                    if (statusNode != null) {
+                        val status = statusNode.textContent.trim()
+
+                        if (status == "OK") {
+                            Log.d(TAG, "Detail: detail obtenu")
+                            val itemNode = doc.getElementsByTagName("ITEM").item(0)
+                            if (itemNode!= null){
+                                val item = itemNode.textContent.trim()
+                                Log.d("detail_item",item)
+                            }
+
+                        } else {
+                        Log.e(TAG, "item detail: Erreur - $status")
+                        // popup with detail Error avec le satus attacher
+                        }
+                    }
+                }catch (e: Exception) {
+                    Log.e(TAG, "Erreur lors de la lecture de la réponse XML", e)
+                }
+
+            },
+            { error ->
+                Log.d(TAG, "item detail error")
+                error.printStackTrace()
+            })
+
+        App.instance.requestQueue?.add(stringRequest)
+    }
+
 
 }

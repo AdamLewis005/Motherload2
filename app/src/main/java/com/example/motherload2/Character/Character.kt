@@ -1,9 +1,9 @@
 package com.example.motherload2.Character
 
-class Character (lon:Float,lat:Float) {
+class Character (lon:String,lat:String) {
     private var name : String = ""
-    private var lon : Float = lon
-    private var lat : Float = lat
+    private var lon : String = lon
+    private var lat : String = lat
     private lateinit var voisins : String
     private lateinit var money : String
     private lateinit var pickaxe : String
@@ -13,7 +13,7 @@ class Character (lon:Float,lat:Float) {
         @Volatile
         private var INSTANCE: Character? = null
 
-        fun getInstance(lon:Float,lat:Float): Character {
+        fun getInstance(lon:String,lat:String): Character {
             return INSTANCE ?: synchronized(this) {
                 INSTANCE ?: Character(lon,lat).also { INSTANCE = it }
             }
@@ -23,14 +23,14 @@ class Character (lon:Float,lat:Float) {
     fun changename(name:String){
         this.name = name
     }
-    fun changecood(lon :Float,lat :Float){
+    fun changecood(lon :String,lat :String){
         this.lon = lon
         this.lat = lat
     }
-    fun getlon():Float {
+    fun getlon():String {
         return this.lon
     }
-    fun getlat():Float{
+    fun getlat():String{
         return this.lat
     }
 
@@ -50,9 +50,16 @@ class Character (lon:Float,lat:Float) {
         this.pickaxe = pick
     }
 
-    fun setitems(items : String){
+    fun additem(item : String){
+        this.items += item
+    }
+
+    fun setitems (items : String){
         this.items = items
     }
+
+
+
 
 
 }
