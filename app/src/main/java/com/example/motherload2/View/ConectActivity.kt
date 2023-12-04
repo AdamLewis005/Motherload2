@@ -1,6 +1,8 @@
 package com.example.motherload2.View
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -10,6 +12,7 @@ import com.example.motherload2.R
 
 class ConectActivity : AppCompatActivity() {
     private lateinit var conectView: ConectView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -21,16 +24,29 @@ class ConectActivity : AppCompatActivity() {
         //editTextLog = findViewById(R.id.edit_log)
         //editTextPass = findViewById(R.id.edit_pass)
 
+
+
+
+
         val buttonConect : Button = findViewById(R.id.conect)
         buttonConect.setOnClickListener {
             // on recupere le login et le mot de passe
             val log = "alewis"//editTextLog.text.toString()
             val pass = "LAt%24yc6@" //editTextPass.text.toString()
             conectView.conectWeb(log,pass)
-            // Une fois connecter, on peut quitter l'activity. Cela reviendra automatiquement
-            // à l'actvity précédente, c'est à dire MainActivity.
-            //finish()
+            Log.d("connected ?",conectView.getconnect().toString())
+            if (conectView.getconnect()) {
+                // button ferme avant la fin de la verif donc faux apuyer 2 fois pour linstant faux faire un delay ou att que la fonction finis
+                val intent = Intent(this, GameActivity::class.java)
+
+                startActivity(intent)
+                // Une fois connecter, on peut quitter l'activity. Cela reviendra automatiquement
+                // à l'actvity précédente, c'est à dire MainActivity.
+                finish()
+            }
+            finish()
         }
+
 
 
 
@@ -73,6 +89,8 @@ class ConectActivity : AppCompatActivity() {
         buttonmarket.setOnClickListener {
             conectView.market()
         }
+
+
 
 
 

@@ -6,4 +6,7 @@ class Marchant {
     fun additem(offer: Offers){
         this.items += listOf(offer)
     }
+    fun resetM(){
+        this.items = listOf()
+    }
 }

@@ -14,6 +14,9 @@ class ConectView : ViewModel() {
     fun conectWeb(login: String, password: String){
         repository.ConectWeb(login,password)
     }
+    fun getconnect():Boolean{
+        return repository.getConected()
+    }
     fun changename(name:String){
         repository.changeName(name,perso)
     }

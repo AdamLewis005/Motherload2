@@ -18,6 +18,9 @@
             android:name=".View.ConectActivity"
             android:exported="false" />
         <activity
+            android:name=".View.GameActivity"
+            android:exported="false" />
+        <activity
             android:name=".View.MainActivity"
             android:exported="true">
             <intent-filter>

@@ -498,7 +498,7 @@ class Connection private constructor() {
                             Log.d(TAG, "market_list: market_list obtained")
                             val offersNode=doc.getElementsByTagName("OFFERS")
                             var i = 0
-
+                            marchant.resetM()
                             while (i < offersNode.length){
                                 val itemNode = doc.getElementsByTagName("item$i").item(0)
 
