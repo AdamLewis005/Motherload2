@@ -69,6 +69,10 @@ class ConectActivity : AppCompatActivity() {
             val item = Item.getInstance(id)
             conectView.detailitem(id,item)
         }
+        val buttonmarket : Button = findViewById(R.id.market)
+        buttonmarket.setOnClickListener {
+            conectView.market()
+        }
 
 
 

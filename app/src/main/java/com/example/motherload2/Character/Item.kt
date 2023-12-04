@@ -19,6 +19,14 @@ class Item (id:String) {
             }
         }
     }
+    fun createitem(nom:String,type:String,rarete: String,image: String,decEn: String,decFr: String){
+        this.nom= nom
+        this.type=type
+        this.decEn = decEn
+        this.rarete = rarete
+        this.image = image
+        this.decFr = decFr
+    }
     fun setnom(nom:String){
         this.nom = nom
     }

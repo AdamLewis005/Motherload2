@@ -7,6 +7,8 @@ import com.android.volley.toolbox.StringRequest
 import com.example.motherload2.App
 import com.example.motherload2.Character.Character
 import com.example.motherload2.Character.Item
+import com.example.motherload2.Character.Marchant
+import com.example.motherload2.Character.Offers
 import org.w3c.dom.Document
 import java.net.URLEncoder
 import java.security.MessageDigest
@@ -463,5 +465,80 @@ class Connection private constructor() {
         App.instance.requestQueue?.add(stringRequest)
     }
 
+
+    fun marketlist(marchant: Marchant) {
+        /*
+        fonction pour communiquer avec le serveur pour obtenir les offre
+         */
+
+        if (!this.conected) {// on verifie qu on soit bien connecter au serveur et quon ai recuperer la sessio et la signature
+            Log.e(TAG,"Not Connected")
+            return
+        }
+
+        val encodeses = URLEncoder.encode(this.session, "UTF-8")
+        val encodesig = URLEncoder.encode(this.signature, "UTF-8")
+
+        val url = BASE_URL + "/market_list.php?session=$encodeses&signature=$encodesig"
+
+        val stringRequest = StringRequest(
+            Request.Method.GET, url,
+            { response -> // la réponse retournée par le WS si succès
+                try {
+                    val docBF: DocumentBuilderFactory = DocumentBuilderFactory.newInstance()
+                    val docBuilder: DocumentBuilder = docBF.newDocumentBuilder()
+                    val doc: Document = docBuilder.parse(response.byteInputStream())
+
+                    // On vérifie le status
+                    val statusNode = doc.getElementsByTagName("STATUS").item(0)
+                    if (statusNode != null) {
+                        val status = statusNode.textContent.trim()
+
+                        if (status == "OK") {
+                            Log.d(TAG, "market_list: market_list obtained")
+                            val offersNode=doc.getElementsByTagName("OFFERS")
+                            var i = 0
+
+                            while (i < offersNode.length){
+                                val itemNode = doc.getElementsByTagName("item$i").item(0)
+
+                                val offer_idNode = itemNode.firstChild
+                                val offer_id = offer_idNode.textContent.trim()
+                                Log.d("offres",offer_id)
+                                val itemidNode = offer_idNode.nextSibling
+                                val itemid = itemidNode.textContent.trim()
+                                Log.d("item",itemid)
+                                val quantityNode = itemidNode.nextSibling
+                                val quantity = quantityNode.textContent.trim()
+                                Log.d("item",quantity)
+                                val prixNode = quantityNode.nextSibling
+                                val prix = prixNode.textContent.trim()
+                                Log.d("item",prix)
+                                val offre = Offers(offer_id,itemid,quantity,prix)
+                                marchant.additem(offre)
+                                Log.d("marchant","succes")
+                                i += 1
+
+                            }
+
+
+
+
+                        } else {
+                            Log.e(TAG, "market_list: Erreur - $status")
+                            // popup with market_list Error
+                        }
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Erreur lors de la lecture de la réponse XML", e)
+                }
+            },
+            { error ->
+                Log.d(TAG, "market_list error")
+                error.printStackTrace()
+            })
+        // ligne importante a ne pas oublier
+        App.instance.requestQueue?.add(stringRequest)
+    }
 
 }

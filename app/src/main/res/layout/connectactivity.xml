@@ -67,6 +67,12 @@
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:text="Detail de litem" />
+        <Button
+            android:id="@+id/market"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:text="Market Liste" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
