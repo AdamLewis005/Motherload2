@@ -1,7 +1,6 @@
 package com.example.motherload2.View.Frag
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,7 +32,7 @@ class OffersFragment : Fragment() {// aucune idee de ce que je fait
         conectView.offre.observe(viewLifecycleOwner, { offers ->
             mAdapter?.updateOffres(offers)
         })
-        Log.d("g",conectView.offre.value.toString())
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -47,6 +46,7 @@ class OffersFragment : Fragment() {// aucune idee de ce que je fait
             if (loffres == null) loffres = ArrayList()
             if (mAdapter == null) mAdapter = OffersRecycler(mListener)
             recyclerView.adapter = mAdapter
+
         }
         return view
     }

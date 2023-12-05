@@ -1,6 +1,5 @@
 package com.example.motherload2.View.Frag
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +15,6 @@ class OffersRecycler (private val mListener: OffersFragment.OnListFragmentIntera
 
     // Utilisez cette fonction pour mettre à jour la liste depuis le ViewModel
     fun updateOffres(newOffers: List<Offers>) {
-        Log.d("teste",newOffers[0].offer_id)
         mValues.clear()
         mValues.addAll(newOffers)
         notifyDataSetChanged()
