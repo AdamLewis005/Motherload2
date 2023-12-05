@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.motherload2.ConectView
 import com.example.motherload2.R
 
+
 class GameActivity : AppCompatActivity() {
     private lateinit var conectView: ConectView
 
@@ -32,19 +33,20 @@ class GameActivity : AppCompatActivity() {
         val buttonShop : Button = findViewById(R.id.shop)
         buttonShop.setOnClickListener {
             val intent = Intent(this, ShopActivity::class.java)
-
             startActivity(intent)
         }
-
+/*
         val buttonInv : Button = findViewById(R.id.inv)
         buttonInv.setOnClickListener {
             val intent = Intent(this, InvActivity::class.java)
 
             startActivity(intent)
         }
+*/
 
 
     }
+
     override fun onResume() {
         super.onResume()
         // L'activity repasse en avant plan : on relance la mise à jour des messages
@@ -54,6 +56,7 @@ class GameActivity : AppCompatActivity() {
         // L'activity passe en arrière-plan : on coupe la mise à jour des messages :
         // Pour ce faire, on vire de la file d'attente le job qui était posté.
         handler.removeCallbacks(updateRunnable)
+
         super.onPause()
     }
 }

@@ -2,6 +2,8 @@ package com.example.motherload2.Conect
 
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.example.motherload2.App
@@ -21,6 +23,9 @@ class Connection private constructor() {
     private lateinit var session : String
     private lateinit var signature : String
     private var conected : Boolean = false
+    private val _offers = MutableLiveData<List<Offers>>()
+    val offers: LiveData<List<Offers>> get() = _offers
+    private val oListe = ArrayList<Offers>()
 
     companion object {
         @Volatile
@@ -516,10 +521,13 @@ class Connection private constructor() {
                                 Log.d("item",prix)
                                 val offre = Offers(offer_id,itemid,quantity,prix)
                                 marchant.additem(offre)
+                                oListe.add(offre)
                                 Log.d("marchant","succes")
                                 i += 1
 
                             }
+                            _offers.postValue(oListe)
+                            Log.d("add", _offers.value?.get(0).toString() )
 
 
 
