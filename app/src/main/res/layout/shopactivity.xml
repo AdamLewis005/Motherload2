@@ -21,8 +21,10 @@
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/maindetailFrag"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:layout="@layout/fragment_offers_list"
+            android:layout_height="0px"
+            android:layout_weight="1"
+            android:name="com.example.motherload2.View.Frag.OffredetailFrag"
+            tools:layout="@layout/fragment_offers_detail"
             />
 
 

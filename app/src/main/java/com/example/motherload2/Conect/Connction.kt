@@ -470,6 +470,57 @@ class Connection private constructor() {
         App.instance.requestQueue?.add(stringRequest)
     }
 
+    fun getname(item_id: String,offers: Offers){
+        if (!this.conected) {
+            // on verifie qu on soit bien connecter au serveur et quon ai recuperer la sessio et la signature
+            Log.e(TAG, "Not Connected")
+            return
+        }
+
+        val encodeses = URLEncoder.encode(this.session, "UTF-8")
+        val encodesig = URLEncoder.encode(this.signature, "UTF-8")
+        val encodeitem = URLEncoder.encode(item_id,"UTF-8")
+        var nom :String = ""
+        val url =
+            BASE_URL + "/item_detail.php?session=$encodeses&signature=$encodesig&item_id=$encodeitem"
+        val stringRequest = StringRequest(
+            Request.Method.GET, url,
+            { response ->
+                try {
+                    val docBF: DocumentBuilderFactory = DocumentBuilderFactory.newInstance()
+                    val docBuilder: DocumentBuilder = docBF.newDocumentBuilder()
+                    val doc: Document = docBuilder.parse(response.byteInputStream())
+
+                    // On vérifie le status
+                    val statusNode = doc.getElementsByTagName("STATUS").item(0)
+                    if (statusNode != null) {
+                        val status = statusNode.textContent.trim()
+
+                        if (status == "OK") {
+                            Log.d(TAG, "Detail: detail obtenu")
+                            val nomNode = doc.getElementsByTagName("NOM").item(0)
+                            nom = nomNode.textContent.trim()
+                            Log.d("detail_item",nom)
+                            offers.setname(nom)
+                        } else {
+                            Log.e(TAG, "item detail: Erreur - $status")
+                            // popup with detail Error avec le satus attacher
+                        }
+                    }
+                }catch (e: Exception) {
+                    Log.e(TAG, "Erreur lors de la lecture de la réponse XML", e)
+                }
+
+            },
+            { error ->
+                Log.d(TAG, "item detail error")
+                error.printStackTrace()
+            })
+        App.instance.requestQueue?.add(stringRequest)
+
+
+    }
+
 
     fun marketlist(marchant: Marchant) {
         /*
@@ -519,7 +570,9 @@ class Connection private constructor() {
                                 val prixNode = quantityNode.nextSibling
                                 val prix = prixNode.textContent.trim()
                                 Log.d("item",prix)
+
                                 val offre = Offers(offer_id,itemid,quantity,prix)
+                                getname(itemid,offre)
                                 marchant.additem(offre)
                                 oListe.add(offre)
                                 Log.d("marchant","succes")
@@ -527,7 +580,6 @@ class Connection private constructor() {
 
                             }
                             _offers.postValue(oListe)
-                            Log.d("add", _offers.value?.get(0).toString() )
 
 
 

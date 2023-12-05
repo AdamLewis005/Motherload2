@@ -2,12 +2,12 @@ package com.example.motherload2.Character
 
 class Item (id:String) {
     private val id = id
-    private lateinit var nom :String
-    private lateinit var  type :String
-    private lateinit var rarete :String
-    private lateinit var image :String
-    private lateinit var decFr :String
-    private lateinit var decEn :String
+    internal var nom :String =""
+    internal var  type :String =""
+    internal var rarete :String =""
+    private var image :String=""
+    internal var decFr :String =""
+    private var decEn :String=""
 
     companion object {
         @Volatile

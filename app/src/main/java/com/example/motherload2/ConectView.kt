@@ -12,7 +12,7 @@ import com.example.motherload2.Conect.Connection
 
 class ConectView : ViewModel() {
     private val repository = Connection.getInstance()
-    private val perso = Character.getInstance("1.9365067f","47.8430441f")
+    private val perso = Character.getInstance("1.9365061f","47.8430441f")
     val marchant = Marchant.getInstance()
     val offre: LiveData<List<Offers>> = repository.offers // Directement lié au LiveData du Repository
 
@@ -48,7 +48,7 @@ class ConectView : ViewModel() {
         repository.marketlist(marchant)
     }
     fun selectOffer(offers: Offers?){
-        _selectedoffers.value = offers
+        _selectedoffers.postValue (offers)
         Log.d("MsgViewModel","Message sélectionné : "+offers?.offer_id)
     }
 

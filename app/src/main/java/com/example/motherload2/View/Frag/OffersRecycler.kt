@@ -31,7 +31,7 @@ class OffersRecycler (private val mListener: OffersFragment.OnListFragmentIntera
     // affichent le message en position 'position'.
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.mItem = mValues[position]
-        holder.midView.text = mValues[position].offer_id
+        holder.mnameView.text = mValues[position].name
         var textContent = mValues[position].quantite
         if (textContent.length > 50) textContent = textContent.substring(0, 47) + "..."
         holder.mquantityView.text = textContent
@@ -47,16 +47,16 @@ class OffersRecycler (private val mListener: OffersFragment.OnListFragmentIntera
     // Le notre contient 3 champs texte destinés à afficher la date, l'auteur et le début du contenu
     // du message
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
-        val midView: TextView
+        val mnameView: TextView
         val mquantityView: TextView
         val mpriceView: TextView
         var mItem: Offers? = null
         override fun toString(): String {
-            return super.toString() + " '" + midView.text + "'"
+            return super.toString() + " '" + mnameView.text + "'"
         }
 
         init {
-            midView = mView.findViewById<View>(R.id.name) as TextView
+            mnameView = mView.findViewById<View>(R.id.name) as TextView
             mquantityView = mView.findViewById<View>(R.id.quantaty) as TextView
             mpriceView = mView.findViewById<View>(R.id.price) as TextView
         }

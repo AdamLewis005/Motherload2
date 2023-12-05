@@ -10,7 +10,7 @@ import com.example.motherload2.R
 import com.example.motherload2.View.Frag.OffersFragment
 import com.example.motherload2.View.Frag.OffredetailFrag
 
-class ShopActivity : AppCompatActivity(){ // aucune idee de comment faire
+class ShopActivity : AppCompatActivity(){
     private lateinit var conectView: ConectView
     private var offersFragmaent : OffersFragment? = null
     private var offersdetailFragment: OffredetailFrag? = null
